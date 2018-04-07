@@ -46,10 +46,24 @@ describe('resolves the rules', () => {
         }
       }
     };
-  
+
     expect(Generator.resolveRules(el, directive)).toEqual({
       required: true,
       email: true
     });
+  });
+
+  test('using HTML5 validation Attributes', () => {
+    const input = document.createElement('input');
+    input.type = 'email';
+    input.required = true;
+
+    expect(Generator.resolveRules(input, {})).toBe('required|email');
+
+    input.type = 'number';
+    input.required = false;
+    input.min = 10;
+    input.max = 20;
+    expect(Generator.resolveRules(input, {})).toBe('decimal|min_value:10|max_value:20');
   });
 });
